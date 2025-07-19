@@ -10,28 +10,24 @@ namespace DICOMReceiver.Models
 {
     public interface IDbHandler
     {
-        // Patient methods
         void AddPatient(Patient patient);
         Patient GetPatientById(int id);
         List<Patient> GetAllPatients();
         void UpdatePatient(Patient patient);
         void DeletePatientById(int id);
 
-        // Study methods
         void AddStudy(Study study);
         Study GetStudyById(int id);
         List<Study> GetStudiesByPatientId(int patientId);
         void UpdateStudy(Study study);
         void DeleteStudyById(int id);
 
-        // Series methods
         void AddSeries(Series series);
         Series GetSeriesById(int id);
         List<Series> GetSeriesByStudyId(int studyId);
         void UpdateSeries(Series series);
         void DeleteSeriesById(int id);
 
-        // Nodes methods
         void AddNode(Nodes node);
         Nodes GetNodeById(int id);
         List<Nodes> GetAllNodes();
@@ -40,7 +36,6 @@ namespace DICOMReceiver.Models
     }
     public class DBHandler : IDbHandler
     {
-        // -------------------- Patient Methods --------------------
 
         public void AddPatient(Patient patient)
         {
@@ -59,7 +54,7 @@ namespace DICOMReceiver.Models
 
         public void UpdatePatient(Patient patient)
         {
-            DbEntity.Instance.Insert(patient); // Assuming Insert handles both Add and Update
+            DbEntity.Instance.Insert(patient); 
         }
 
         public void DeletePatientById(int id)
@@ -68,8 +63,6 @@ namespace DICOMReceiver.Models
             if (patient != null)
                 DbEntity.Instance.Delete(patient);
         }
-
-        // -------------------- Study Methods --------------------
 
         public void AddStudy(Study study)
         {
@@ -98,8 +91,6 @@ namespace DICOMReceiver.Models
                 DbEntity.Instance.Delete(study);
         }
 
-        // -------------------- Series Methods --------------------
-
         public void AddSeries(Series series)
         {
             DbEntity.Instance.Insert(series);
@@ -127,8 +118,6 @@ namespace DICOMReceiver.Models
                 DbEntity.Instance.Delete(series);
         }
 
-        // -------------------- Nodes Methods --------------------
-
         public void AddNode(Nodes node)
         {
             DbEntity.Instance.Insert(node);
@@ -146,7 +135,7 @@ namespace DICOMReceiver.Models
 
         public void UpdateNode(Nodes node)
         {
-            DbEntity.Instance.Insert(node); // Assuming Insert also updates
+            DbEntity.Instance.Insert(node); 
         }
 
         public void DeleteNodeById(int id)
