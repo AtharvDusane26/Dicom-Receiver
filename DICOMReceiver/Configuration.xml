@@ -1,0 +1,5 @@
+
+<Configuration>
+	<DatabaseFilePath>D:\Projects\Working Project\Dicom Receiver\DICOMReceiver\DicomData.db</DatabaseFilePath>
+	<UsePassword>false</UsePassword>
+</Configuration>
