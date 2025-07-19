@@ -14,9 +14,10 @@ namespace DICOMReceiver.Models.Mappings
         {
             Table("Nodes");
 
-            Id(x => x.Id).GeneratedBy.Identity();
+            Id(x => x.AETitle)
+              .Column("AETitle")
+              .GeneratedBy.Assigned();
 
-            Map(x => x.AETitle).Not.Nullable();
             Map(x => x.Host).Not.Nullable();
             Map(x => x.Port).Not.Nullable();
         }

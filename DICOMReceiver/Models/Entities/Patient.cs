@@ -9,7 +9,6 @@ namespace DICOMReceiver.Models.Entities
 {
     public class Patient : BaseIdentifier
     {
-        public virtual int Id { get; set; }
         public virtual string PatientID { get; set; }                    // (0010,0020)
         public virtual string PatientName { get; set; }                  // (0010,0010)
         public virtual string PatientSex { get; set; }                   // (0010,0040)

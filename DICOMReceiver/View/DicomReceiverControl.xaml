@@ -49,6 +49,8 @@
             <Button Content="Stop Server" Width="100" Margin="5" Click="StopServer_Click" />
             <Button Content="Echo Test" Width="100" Margin="5" Click="EchoTest_Click" />
             <Button Content="Auto Route" Width="100" Margin="5" Click="AutoRoute_Click" />
+            <Button Content="Worklist" Width="100" Margin="5" Click="Worklist_Click" />
+
         </StackPanel>
     </Grid>
 </UserControl>

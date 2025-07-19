@@ -9,7 +9,6 @@ namespace DICOMReceiver.Models.Entities
 {
     public class Series : BaseIdentifier
     {
-        public virtual int Id { get; set; }
         public virtual string SeriesInstanceUID { get; set; }            // (0020,000E)
         public virtual string SeriesNumber { get; set; }                 // (0020,0011)
         public virtual string SeriesDate { get; set; }                   // (0008,0021)
@@ -17,7 +16,7 @@ namespace DICOMReceiver.Models.Entities
         public virtual string Modality { get; set; }                     // (0008,0060)
         public virtual string SeriesDescription { get; set; }            // (0008,103E)
         public virtual string BodyPartExamined { get; set; }             // (0018,0015)
-        public virtual int StudyId { get; set; }                         // Foreign key
+        public virtual string StudyId { get; set; }                         // Foreign key
     }
 
 }

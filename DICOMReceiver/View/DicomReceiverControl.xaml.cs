@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using FellowOakDicom.Network.Client;
 using FellowOakDicom.Network;
 using DICOMReceiver.Models;
+using FellowOakDicom;
+using DICOMReceiver.Models.Entities;
 
 namespace DICOMReceiver.View
 {
@@ -21,7 +23,7 @@ namespace DICOMReceiver.View
         {
             InitializeComponent();
             GetNodesFromDatabase();
-             dataGridNodes.ItemsSource = Nodes;
+            dataGridNodes.ItemsSource = Nodes;
             _logger = LoggerFactory.Create(builder => { }).CreateLogger("DICOM");
             _serverManager = new DicomReceiverServerManager();
         }
@@ -89,14 +91,14 @@ namespace DICOMReceiver.View
             {
                 MessageBox.Show($"Failed to stop DICOM server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }     
+        }
         private async void EchoTest_Click(object sender, RoutedEventArgs e)
         {
             if (dataGridNodes.SelectedItem is Node node)
             {
                 try
                 {
-                    var client = DicomClientFactory.Create(node.Host, node.Port, false, "MYAE", node.AETitle);
+                    var client = DicomClientFactory.Create(node.Host, node.Port, false, "Atharv", node.AETitle);
                     var request = new DicomCEchoRequest();
 
                     bool success = false;
@@ -125,9 +127,79 @@ namespace DICOMReceiver.View
         }
 
 
-        private void AutoRoute_Click(object sender, RoutedEventArgs e)
+        private async void AutoRoute_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Auto-routing logic not yet implemented.");
+            // Let user choose a DICOM file
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "DICOM files (*.dcm)|*.dcm",
+                Title = "Select DICOM file to auto-route"
+            };
+
+            if (dialog.ShowDialog() != true)
+            {
+                MessageBox.Show("No DICOM file selected.", "Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            string dicomFilePath = dialog.FileName;
+
+            // Load selected DICOM file
+            DicomFile dicomFile;
+            try
+            {
+                dicomFile = await DicomFile.OpenAsync(dicomFilePath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load DICOM file:\n{ex.Message}", "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // List of route nodes
+            var nodes = GetRouteNodes();
+
+            foreach (var node in nodes)
+            {
+                try
+                {
+                    var client = DicomClientFactory.Create(node.Host, node.Port, false, "MYAE", node.AETitle);
+                    var request = new DicomCStoreRequest(dicomFile);
+
+                    await client.AddRequestAsync(request);
+                    bool success = false;
+                    request.OnResponseReceived += (req, resp) =>
+                    {
+                        success = resp.Status == DicomStatus.Success;
+                    };
+                    await client.SendAsync();
+                    MessageBox.Show(
+                        $"Successfully auto-routed to {node.AETitle} at {node.Host}:{node.Port}.",
+                        "Routing Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Routing to {node.AETitle} failed:\n{ex.Message}",
+                        "Routing Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+        }
+        private List<RouteNode> GetRouteNodes()
+        {
+            return new List<RouteNode>
+            {
+            new RouteNode { AETitle = "Atharv", Host = "localhost", Port = 104 },
+            };
+        }
+
+        private void Worklist_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new WorklistControl();
+            window.Owner = Window.GetWindow(this);
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.ShowDialog();
         }
     }
 }

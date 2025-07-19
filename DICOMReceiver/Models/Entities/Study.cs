@@ -9,7 +9,6 @@ namespace DICOMReceiver.Models.Entities
 {
     public class Study : BaseIdentifier
     {
-        public virtual int Id { get; set; }
         public virtual string StudyInstanceUID { get; set; }             // (0020,000D)
         public  virtual string StudyID { get; set; }                      // (0020,0010)
         public virtual string StudyDate { get; set; }                    // (0008,0020)
@@ -18,7 +17,7 @@ namespace DICOMReceiver.Models.Entities
         public virtual string ReferringPhysicianName { get; set; }       // (0008,0090)
         public virtual string AccessionNumber { get; set; }              // (0008,0050)
         public virtual  string ModalitiesInStudy { get; set; }            // (0008,0061)
-        public virtual int PatientId { get; set; }                       // Foreign key
+        public virtual string PatientId { get; set; }                       // Foreign key
     }
 
 }

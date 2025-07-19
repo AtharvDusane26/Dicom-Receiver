@@ -14,10 +14,9 @@ namespace DICOMReceiver.Models.Mappings
         public PatientMap()
         {
             Table("Patients");
-
-            Id(x => x.Id).GeneratedBy.Identity();
-
-            Map(x => x.PatientID);
+            Id(x => x.PatientID)
+            .Column("PatientID")
+            .GeneratedBy.Assigned(); // ✅ You will provide the value manually
             Map(x => x.PatientName);
             Map(x => x.PatientSex);
             Map(x => x.PatientBirthDate);

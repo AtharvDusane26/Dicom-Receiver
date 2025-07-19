@@ -18,13 +18,14 @@ namespace DICOMReceiver.Models
 
         void AddStudy(Study study);
         Study GetStudyById(int id);
-        List<Study> GetStudiesByPatientId(int patientId);
+        List<Study> GetStudiesByPatientId(string patientId);
         void UpdateStudy(Study study);
         void DeleteStudyById(int id);
+        List<Study> GetAllStudies();
 
         void AddSeries(Series series);
         Series GetSeriesById(int id);
-        List<Series> GetSeriesByStudyId(int studyId);
+        List<Series> GetSeriesByStudyId(string studyId);
         void UpdateSeries(Series series);
         void DeleteSeriesById(int id);
 
@@ -74,11 +75,14 @@ namespace DICOMReceiver.Models
             return DbEntity.Instance.GetSingle<Study>(id);
         }
 
-        public List<Study> GetStudiesByPatientId(int patientId)
+        public List<Study> GetStudiesByPatientId(string patientId)
         {
             return DbEntity.Instance.GetFiltered<Study>(x => x.PatientId == patientId).ToList();
         }
-
+        public List<Study> GetAllStudies()
+        {
+            return DbEntity.Instance.GetAll<Study>().ToList();
+        }
         public void UpdateStudy(Study study)
         {
             DbEntity.Instance.Insert(study);
@@ -101,7 +105,7 @@ namespace DICOMReceiver.Models
             return DbEntity.Instance.GetSingle<Series>(id);
         }
 
-        public List<Series> GetSeriesByStudyId(int studyId)
+        public List<Series> GetSeriesByStudyId(string studyId)
         {
             return DbEntity.Instance.GetFiltered<Series>(x => x.StudyId == studyId).ToList();
         }

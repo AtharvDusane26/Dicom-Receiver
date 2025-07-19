@@ -65,18 +65,18 @@ public class DicomCStoreServiceProvider : DicomService, IDicomServiceProvider, I
             };
             dbHandler.AddPatient(patient);
 
-            var study = new Study
-            {
-                StudyInstanceUID = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyInstanceUID, string.Empty),
-                StudyID = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyID, string.Empty),
-                StudyDate = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyDate, string.Empty),
-                StudyTime = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyTime, string.Empty),
-                StudyDescription = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyDescription, string.Empty),
-                ReferringPhysicianName = request.Dataset.GetSingleValueOrDefault(DicomTag.ReferringPhysicianName, string.Empty),
-                AccessionNumber = request.Dataset.GetSingleValueOrDefault(DicomTag.AccessionNumber, string.Empty),
-                ModalitiesInStudy = request.Dataset.GetSingleValueOrDefault(DicomTag.ModalitiesInStudy, string.Empty),
-                PatientId = patient.Id
-            };
+            var study = new Study();
+
+            study.StudyInstanceUID = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyInstanceUID, string.Empty);
+            study.StudyID = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyID, string.Empty);
+            study.StudyDate = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyDate, string.Empty);
+            study.StudyTime = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyTime, string.Empty);
+            study.StudyDescription = request.Dataset.GetSingleValueOrDefault(DicomTag.StudyDescription, string.Empty);
+            study.ReferringPhysicianName = request.Dataset.GetSingleValueOrDefault(DicomTag.ReferringPhysicianName, string.Empty);
+            study.AccessionNumber = request.Dataset.GetSingleValueOrDefault(DicomTag.AccessionNumber, string.Empty);
+            study.ModalitiesInStudy = request.Dataset.GetSingleValueOrDefault(DicomTag.ModalitiesInStudy, string.Empty);
+            study.PatientId = patient.PatientID;
+           
             dbHandler.AddStudy(study);
 
             var series = new Series
@@ -85,7 +85,7 @@ public class DicomCStoreServiceProvider : DicomService, IDicomServiceProvider, I
                 SeriesNumber = request.Dataset.GetSingleValueOrDefault(DicomTag.SeriesNumber, string.Empty),
                 Modality = request.Dataset.GetSingleValueOrDefault(DicomTag.Modality, string.Empty),
                 SeriesDescription = request.Dataset.GetSingleValueOrDefault(DicomTag.SeriesDescription, string.Empty),
-                StudyId = study.Id
+                StudyId = study.StudyID
             };
             dbHandler.AddSeries(series);
 

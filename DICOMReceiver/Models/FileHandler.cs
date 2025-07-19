@@ -10,22 +10,22 @@ namespace DICOMReceiver.Models
     using System.IO;
     public interface IFileHandler
     {
-        void SaveDicomFile(byte[] dicomData, string folderPath, string fileName);
+        string SaveDicomFile(byte[] dicomData, string folderPath, string fileName);
         void DeleteDicomFile(string filePath);
     }
-    public  class FileHandler : IFileHandler
+    public class FileHandler : IFileHandler
     {
-        public  void SaveDicomFile(byte[] dicomData, string folderPath, string fileName)
-        {
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+        //public  void SaveDicomFile(byte[] dicomData, string folderPath, string fileName)
+        //{
+        //    if (!Directory.Exists(folderPath))
+        //    {
+        //        Directory.CreateDirectory(folderPath);
+        //    }
 
-            string fullPath = Path.Combine(folderPath, fileName);
+        //    string fullPath = Path.Combine(folderPath, fileName);
 
-            File.WriteAllBytes(fullPath, dicomData);
-        }
+        //    File.WriteAllBytes(fullPath, dicomData);
+        //}
 
         private bool DicomFileExists(string filePath)
         {
@@ -37,6 +37,13 @@ namespace DICOMReceiver.Models
             {
                 File.Delete(filePath);
             }
+        }
+        public string SaveDicomFile(byte[] data, string folderPath, string fileName)
+        {
+            Directory.CreateDirectory(folderPath);
+            string fullPath = Path.Combine(folderPath, fileName);
+            File.WriteAllBytes(fullPath, data);
+            return fullPath;
         }
     }
 
