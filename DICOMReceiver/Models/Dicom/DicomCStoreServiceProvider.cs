@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using DICOMReceiver;
 
 public class DicomCStoreServiceProvider : DicomService, IDicomServiceProvider, IDicomCStoreProvider, IDicomCEchoProvider
 {
@@ -90,9 +91,10 @@ public class DicomCStoreServiceProvider : DicomService, IDicomServiceProvider, I
             dbHandler.AddSeries(series);
 
             var fileHandler = new FileHandler();
-            string folderPath = "ReceivedDicoms";
-            string fileName = $"{study.StudyID}.{series.SeriesNumber}.{request.SOPInstanceUID.UID}.dcm";
-
+            string folderPath = Path.Combine(DirectoryPath.ImageDirectory,study.StudyInstanceUID,series.SeriesInstanceUID);
+            string fileName = $"{request.SOPInstanceUID.UID}.dcm";
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
             using var ms = new MemoryStream();
             request.File.Save(ms);
             fileHandler.SaveDicomFile(ms.ToArray(), folderPath, fileName);

@@ -1,4 +1,6 @@
-﻿using DBConfig;
+﻿using ApplicationBase;
+using DBConfig;
+using DICOMReceiver.Models;
 using FluentNHibernate.Mapping;
 using System.Configuration;
 using System.Data;
@@ -14,9 +16,32 @@ namespace DICOMReceiver
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            var filePath = @"D:\Projects\Working Project\Dicom Receiver\DICOMReceiver\Configuration.xml";
+            var startup = new StartUp();
+            startup.Start();
+        }
+    }
+    internal class StartUp : ApplicationComponent
+    {
+        public override void Start()
+        {
+            base.Start();
+            if (String.IsNullOrWhiteSpace(GeneralSettings.Default.BaseDirectory))
+            {
+                var directoryCreator = new View.DirectoryCreatorControl();
+                if (directoryCreator.ShowDialog() != true)
+                {
+                    Application.Current.Shutdown();
+                    return;
+                }
+            }
+            var component = new DatabaseConnectionComponent();
+            component.LoadConfig();
             var manager = new DataBaseManager();
-            manager.Start(filePath, null);
+            manager.Start(component.ConfigFilePath, null);
+            var window = new MainWindow();
+            SetHost(window, ApplicationType.Window);
+            Platform.Log(LogLevel.Info, "Application Started");
+            window.ShowDialog();
         }
     }
 }

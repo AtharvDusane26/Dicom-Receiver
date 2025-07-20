@@ -34,7 +34,7 @@
         </GroupBox>
 
         <!-- Nodes Table -->
-        <DataGrid x:Name="dataGridNodes" Grid.Row="1" AutoGenerateColumns="False" HeadersVisibility="Column"
+        <DataGrid x:Name="dataGridNodes" Grid.Row="1" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True"
                   CanUserAddRows="False" Margin="0 0 0 10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AE Title" Binding="{Binding AETitle}" Width="*" />

@@ -72,10 +72,12 @@ namespace DICOMReceiver.View
             try
             {
                 _serverManager.Start(104); // Port is hardcoded; can be configurable
+                ApplicationBase.Platform.Log(ApplicationBase.LogLevel.Info, "DICOM Server Started.");
                 MessageBox.Show("DICOM Server Started.");
             }
             catch (Exception ex)
             {
+                ApplicationBase.Platform.Log(ApplicationBase.LogLevel.Error, $"Failed to start DICOM server: {ex.Message}");
                 MessageBox.Show($"Failed to start DICOM server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -85,10 +87,12 @@ namespace DICOMReceiver.View
             try
             {
                 _serverManager.Stop();
+                ApplicationBase.Platform.Log(ApplicationBase.LogLevel.Info, "DICOM Server Stopped.");
                 MessageBox.Show("DICOM Server Stopped.");
             }
             catch (Exception ex)
             {
+                ApplicationBase.Platform.Log(ApplicationBase.LogLevel.Error, $"Failed to stop DICOM server: {ex.Message}");
                 MessageBox.Show($"Failed to stop DICOM server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
