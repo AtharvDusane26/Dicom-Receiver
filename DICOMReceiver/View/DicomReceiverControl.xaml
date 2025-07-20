@@ -34,7 +34,7 @@
         </GroupBox>
 
         <!-- Nodes Table -->
-        <DataGrid x:Name="dataGridNodes" Grid.Row="1" AutoGenerateColumns="False" HeadersVisibility="Column" IsReadOnly="True"
+        <DataGrid x:Name="dataGridNodes" Grid.Row="1" AutoGenerateColumns="False" SelectionChanged="dataGridNodes_SelectionChanged"  HeadersVisibility="Column" IsReadOnly="True"
                   CanUserAddRows="False" Margin="0 0 0 10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AE Title" Binding="{Binding AETitle}" Width="*" />
@@ -47,8 +47,8 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
             <Button Content="Start Server" Width="100" Margin="5" Click="StartServer_Click" />
             <Button Content="Stop Server" Width="100" Margin="5" Click="StopServer_Click" />
-            <Button Content="Echo Test" Width="100" Margin="5" Click="EchoTest_Click" />
-            <Button Content="Auto Route" Width="100" Margin="5" Click="AutoRoute_Click" />
+            <Button x:Name="btnEchoTest" Content="Echo Test" Width="100" Margin="5" Click="EchoTest_Click" />
+            <Button x:Name="btnAutoRoute" Content="Auto Route" Width="100" Margin="5" Click="AutoRoute_Click" />
             <Button Content="Worklist" Width="100" Margin="5" Click="Worklist_Click" />
 
         </StackPanel>
