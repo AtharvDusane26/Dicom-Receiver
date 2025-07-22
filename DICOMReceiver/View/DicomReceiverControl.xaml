@@ -45,6 +45,7 @@
 
         <!-- Control Buttons -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
+            <Button Content="Set FilePath" Width="100" Margin="5" Click="Button_Click" />
             <Button Content="Start Server" Width="100" Margin="5" Click="StartServer_Click" />
             <Button Content="Stop Server" Width="100" Margin="5" Click="StopServer_Click" />
             <Button x:Name="btnEchoTest" Content="Echo Test" Width="100" Margin="5" Click="EchoTest_Click" />

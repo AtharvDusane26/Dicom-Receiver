@@ -125,7 +125,7 @@ namespace DICOMReceiver.View
                 {
                     try
                     {
-                        var client = DicomClientFactory.Create(host, port, false, "Atharv", aeTitle);
+                        var client = DicomClientFactory.Create(host, port, false, SR.StrApplicationAETitle, aeTitle);
                         var request = new DicomCEchoRequest();
 
                         bool success = false;
@@ -166,9 +166,9 @@ namespace DICOMReceiver.View
             {
                 btnAutoRoute.IsEnabled = false;
                 // Let user choose a DICOM file
-                foreach (var dicomFilePath in Directory.GetFiles(DirectoryPath.ImageDirectory, "*", SearchOption.AllDirectories))
+                foreach (var dicomFilePath in Directory.GetFiles(DirectoryPath.Instance.ImageDirectory, "*", SearchOption.AllDirectories))
                 {
-                    Parallel.ForEach(Directory.GetFiles(DirectoryPath.ImageDirectory, "*", SearchOption.AllDirectories), dicomFilePath =>
+                    Parallel.ForEach(Directory.GetFiles(DirectoryPath.Instance.ImageDirectory, "*", SearchOption.AllDirectories), dicomFilePath =>
                     {
                         if (!dicomFilePath.EndsWith(".dcm", StringComparison.OrdinalIgnoreCase))
                             return; // Skip non-DICOM files
@@ -198,7 +198,7 @@ namespace DICOMReceiver.View
                             // Create DICOM client and send C-STORE request
                             try
                             {
-                                var client = DicomClientFactory.Create(node.Host, node.Port, false, "MYAE", node.AETitle);
+                                var client = DicomClientFactory.Create(node.Host, node.Port, false, SR.StrApplicationAETitle, node.AETitle);
                                 var request = new DicomCStoreRequest(dicomFile);
                                 await client.AddRequestAsync(request);
                                 bool success = false;
@@ -229,7 +229,7 @@ namespace DICOMReceiver.View
         {
             return new List<RouteNode>
             {
-            new RouteNode { AETitle = "Atharv", Host = "localhost", Port = 104 },
+            new RouteNode { AETitle = "Receiver", Host = "localhost", Port = 104 },
             };
         }
 
@@ -248,6 +248,15 @@ namespace DICOMReceiver.View
                 txtAETitle.Text = selectedNode.AETitle;
                 txtHost.Text = selectedNode.Host;
                 txtPort.Text = selectedNode.Port.ToString();
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var directoryCreator = new View.DirectoryCreatorControl();
+            if (directoryCreator.ShowDialog() == true)
+            {
+                GeneralSettings.Default.Save();
             }
         }
     }

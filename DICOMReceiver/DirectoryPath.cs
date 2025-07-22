@@ -25,12 +25,12 @@ namespace DICOMReceiver
                 return _directoryPath;
             }
         }
-        public static string ImageDirectory
+        public  string ImageDirectory
         {
             get => _imageDirectory;
             private set => _imageDirectory = value;
         }
-        private static void CreateDirectoryPath()
+        private  void CreateDirectoryPath()
         {
             if (!String.IsNullOrWhiteSpace(ImageDirectory) && !Directory.Exists(ImageDirectory))
             {

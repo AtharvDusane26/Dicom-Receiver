@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace DICOMReceiver.View
 {
@@ -32,6 +33,34 @@ namespace DICOMReceiver.View
             DBHandler db = new DBHandler();
             List<Study> studies = db.GetAllStudies(); // You must implement this method
             StudyDataGrid.ItemsSource = studies;
+            var contextMenu = new ContextMenu();
+            MenuItem viewerMenuItem = new MenuItem
+            {
+                Header = "Launch Viewer",
+            };
+            viewerMenuItem.Click += ViewerMenuItem_Click;
+            contextMenu.Items.Add(viewerMenuItem);
+            StudyDataGrid.ContextMenu = contextMenu;
+        }
+        public void ViewerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (StudyDataGrid.SelectedItem is Study selectedStudy)
+            {
+                LaunchViewer(selectedStudy);
+            }
+        }
+        private void LaunchViewer(Study study)
+        {
+            var image = Directory.GetFiles(DirectoryPath.Instance.ImageDirectory, $"{study.StudyInstanceUID}/*.dcm", SearchOption.AllDirectories);
+            if (image != null && image.Count() > 0)
+            {
+                var viewer = new ImageViewerControl(image);
+                viewer.Show();
+            }
+            else
+            {
+                MessageBox.Show("No images found for this study.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
