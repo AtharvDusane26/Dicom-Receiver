@@ -14,10 +14,11 @@ namespace DICOMReceiver.Models.Mappings
         {
             Table("Studies");
 
-            Id(x => x.Id).GeneratedBy.Identity();
+            Id(x => x.StudyID)
+            .Column("StudyID")
+            .GeneratedBy.Assigned();
 
             Map(x => x.StudyInstanceUID);
-            Map(x => x.StudyID);
             Map(x => x.StudyDate);
             Map(x => x.StudyTime);
             Map(x => x.StudyDescription);
@@ -25,7 +26,7 @@ namespace DICOMReceiver.Models.Mappings
             Map(x => x.AccessionNumber);
             Map(x => x.ModalitiesInStudy);
 
-            References<Patient>(x => x.PatientId)
+            Map(x => x.PatientId)
                 .Column("PatientId")
                 .Not.Nullable();
         }
