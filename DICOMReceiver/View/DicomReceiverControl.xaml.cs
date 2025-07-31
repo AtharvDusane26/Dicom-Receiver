@@ -30,7 +30,6 @@ namespace DICOMReceiver.View
         {
             InitializeComponent();
             GetNodesFromDatabase();
-            dataGridNodes.ItemsSource = Nodes;
             _logger = LoggerFactory.Create(builder => { }).CreateLogger("DICOM");
             _serverManager = new DicomReceiverServerManager();
         }
@@ -46,6 +45,11 @@ namespace DICOMReceiver.View
                     Port = node.Port
                 });
             });
+            var settings = GeneralSettings.Default;
+            txtAETitle.Text = settings.LocalAETitle;
+            txtHost.Text = settings.LocalIP;
+            txtPort.Text = $"{settings.LocalPort}";
+            dataGridNodes.ItemsSource = Nodes;
         }
         private void AddNode_Click(object sender, RoutedEventArgs e)
         {
@@ -70,7 +74,7 @@ namespace DICOMReceiver.View
             });
             if (!Nodes.Any(o => o.AETitle == node.AETitle))
             {
-                Nodes.Add(node);    
+                Nodes.Add(node);
             }
             //txtAETitle.Clear();
             //txtHost.Clear();
@@ -81,7 +85,7 @@ namespace DICOMReceiver.View
         {
             try
             {
-                _serverManager.Start(104); // Port is hardcoded; can be configurable
+                _serverManager.Start(GeneralSettings.Default.LocalPort); // Port is hardcoded; can be configurable
                 ApplicationBase.Platform.Log(ApplicationBase.LogLevel.Info, "DICOM Server Started.");
                 MessageBox.Show("DICOM Server Started.");
             }
@@ -106,26 +110,24 @@ namespace DICOMReceiver.View
                 MessageBox.Show($"Failed to stop DICOM server: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        private async void EchoTest_Click(object sender, RoutedEventArgs e)
+        private async void Echo(Node node)
         {
-            string aeTitle = txtAETitle.Text.Trim();
-            string host = txtHost.Text.Trim();
-            string portText = txtPort.Text.Trim();
-
+            string aeTitle = node.AETitle.Trim();
+            string host = node.Host.Trim();
+            string portText = $"{node.Port}";
             if (string.IsNullOrWhiteSpace(aeTitle) || string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(portText) || !int.TryParse(portText, out int port))
             {
                 MessageBox.Show("Please enter valid AE Title, Host, and Port.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            btnEchoTest.IsEnabled = false;
             try
             {
                 string resultMessage = await Task.Run(async () =>
                 {
                     try
                     {
-                        var client = DicomClientFactory.Create(host, port, false, SR.StrApplicationAETitle, aeTitle);
+                        var client = DicomClientFactory.Create(host, port, false, GeneralSettings.Default.LocalAETitle, aeTitle);
                         var request = new DicomCEchoRequest();
 
                         bool success = false;
@@ -152,84 +154,83 @@ namespace DICOMReceiver.View
                     resultMessage.StartsWith("Echo failed:") ? MessageBoxImage.Error :
                     MessageBoxImage.Warning);
             }
-            finally
+            catch (Exception ex)
             {
-                btnEchoTest.IsEnabled = true;
+                Platform.Log(ApplicationBase.LogLevel.Error, $"Error in Echo {ex}");
+                MessageBox.Show("Error in echo");
             }
         }
 
+        //private async void AutoRoute_Click(object sender, RoutedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        btnAutoRoute.IsEnabled = false;
+        //        // Let user choose a DICOM file
+        //        foreach (var dicomFilePath in Directory.GetFiles(DirectoryPath.Instance.ImageDirectory, "*", SearchOption.AllDirectories))
+        //        {
+        //            Parallel.ForEach(Directory.GetFiles(DirectoryPath.Instance.ImageDirectory, "*", SearchOption.AllDirectories), dicomFilePath =>
+        //            {
+        //                if (!dicomFilePath.EndsWith(".dcm", StringComparison.OrdinalIgnoreCase))
+        //                    return; // Skip non-DICOM files
+        //            });
+        //            DicomFile dicomFile;
+        //            try
+        //            {
+        //                dicomFile = await DicomFile.OpenAsync(dicomFilePath);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                MessageBox.Show($"Failed to load DICOM file:\n{ex.Message}", "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //                continue;
+        //            }
 
+        //            // List of route nodes
+        //            var nodes = GetRouteNodes();
 
-        private async void AutoRoute_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                btnAutoRoute.IsEnabled = false;
-                // Let user choose a DICOM file
-                foreach (var dicomFilePath in Directory.GetFiles(DirectoryPath.Instance.ImageDirectory, "*", SearchOption.AllDirectories))
-                {
-                    Parallel.ForEach(Directory.GetFiles(DirectoryPath.Instance.ImageDirectory, "*", SearchOption.AllDirectories), dicomFilePath =>
-                    {
-                        if (!dicomFilePath.EndsWith(".dcm", StringComparison.OrdinalIgnoreCase))
-                            return; // Skip non-DICOM files
-                    });
-                    DicomFile dicomFile;
-                    try
-                    {
-                        dicomFile = await DicomFile.OpenAsync(dicomFilePath);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Failed to load DICOM file:\n{ex.Message}", "Load Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        continue;
-                    }
-
-                    // List of route nodes
-                    var nodes = GetRouteNodes();
-
-                        Parallel.ForEachAsync(nodes, async (node, cancellationToken) =>
-                        {
-                            if (string.IsNullOrWhiteSpace(node.AETitle) || string.IsNullOrWhiteSpace(node.Host) || node.Port <= 0)
-                            {
-                                Platform.Log(ApplicationBase.LogLevel.Info,
-                                    $"Invalid routing node: {node.AETitle} at {node.Host}:{node.Port}");
-                                return;
-                            }
-                            // Create DICOM client and send C-STORE request
-                            try
-                            {
-                                var client = DicomClientFactory.Create(node.Host, node.Port, false, SR.StrApplicationAETitle, node.AETitle);
-                                var request = new DicomCStoreRequest(dicomFile);
-                                await client.AddRequestAsync(request);
-                                bool success = false;
-                                request.OnResponseReceived += (req, resp) =>
-                                {
-                                    success = resp.Status == DicomStatus.Success;
-                                };
-                                await client.SendAsync();
-                            }
-                            catch (Exception ex)
-                            {
-                                Platform.Log(ApplicationBase.LogLevel.Error,
-                                    $"Routing to {node.AETitle} failed:\n{ex.Message}");
-                            }
-                        });                                          
-                }
-                MessageBox.Show(
-                $"Successfully auto-routed",
-                               "Routing Success", System.Windows.MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            finally
-            {
-                btnAutoRoute.IsEnabled = true;
-            }
-        }
+        //                Parallel.ForEachAsync(nodes, async (node, cancellationToken) =>
+        //                {
+        //                    if (string.IsNullOrWhiteSpace(node.AETitle) || string.IsNullOrWhiteSpace(node.Host) || node.Port <= 0)
+        //                    {
+        //                        Platform.Log(ApplicationBase.LogLevel.Info,
+        //                            $"Invalid routing node: {node.AETitle} at {node.Host}:{node.Port}");
+        //                        return;
+        //                    }
+        //                    // Create DICOM client and send C-STORE request
+        //                    try
+        //                    {
+        //                        var client = DicomClientFactory.Create(node.Host, node.Port, false, SR.StrApplicationAETitle, node.AETitle);
+        //                        var request = new DicomCStoreRequest(dicomFile);
+        //                        await client.AddRequestAsync(request);
+        //                        bool success = false;
+        //                        request.OnResponseReceived += (req, resp) =>
+        //                        {
+        //                            success = resp.Status == DicomStatus.Success;
+        //                        };
+        //                        await client.SendAsync();
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+        //                        Platform.Log(ApplicationBase.LogLevel.Error,
+        //                            $"Routing to {node.AETitle} failed:\n{ex.Message}");
+        //                    }
+        //                });                                          
+        //        }
+        //        MessageBox.Show(
+        //        $"Successfully auto-routed",
+        //                       "Routing Success", System.Windows.MessageBoxButton.OK, MessageBoxImage.Information);
+        //    }
+        //    finally
+        //    {
+        //        btnAutoRoute.IsEnabled = true;
+        //    }
+        //}
 
         private List<RouteNode> GetRouteNodes()
         {
             return new List<RouteNode>
             {
-            new RouteNode { AETitle = "Receiver", Host = "localhost", Port = 104 },
+            new RouteNode { AETitle = "Reciever", Host = "192.168.3.20", Port = 109 },
             };
         }
 
@@ -239,18 +240,30 @@ namespace DICOMReceiver.View
             window.Owner = Window.GetWindow(this);
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.ShowDialog();
+            GetNodesFromDatabase();
         }
 
         private void dataGridNodes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (dataGridNodes.SelectedItem is Node selectedNode)
+            if (dataGridNodes.SelectedItem is Node node)
             {
-                txtAETitle.Text = selectedNode.AETitle;
-                txtHost.Text = selectedNode.Host;
-                txtPort.Text = selectedNode.Port.ToString();
+                var contextMenu = new ContextMenu();
+                MenuItem echo = new MenuItem
+                {
+                    Header = "Echo",
+                };
+                echo.Click += async (o, e) =>
+                {
+                    await Task.Run(() =>
+                    {
+                        Echo(node);
+                    });
+                };
+                contextMenu.Items.Add(echo);
+                dataGridNodes.ContextMenu = contextMenu;
+
             }
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var directoryCreator = new View.DirectoryCreatorControl();
@@ -258,6 +271,21 @@ namespace DICOMReceiver.View
             {
                 GeneralSettings.Default.Save();
             }
+        }
+
+        private void Congigure_Click(object sender, RoutedEventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(txtAETitle.Text) || String.IsNullOrWhiteSpace(txtHost.Text) || String.IsNullOrWhiteSpace(txtPort.Text) && !int.TryParse(txtPort.Text, out int _))
+            {
+                MessageBox.Show("Please enter valid configurations");
+                return;
+            }
+            var settings = GeneralSettings.Default;
+            settings.LocalAETitle = txtAETitle.Text;
+            settings.LocalIP = txtHost.Text;
+            settings.LocalPort = int.Parse(txtPort.Text);
+            settings.Save();
+            MessageBox.Show("Configuration Updated!");
         }
     }
 }

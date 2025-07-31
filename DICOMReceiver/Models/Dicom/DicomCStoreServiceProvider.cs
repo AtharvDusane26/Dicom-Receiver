@@ -92,7 +92,7 @@ namespace DICOMReceiver.Models.Dicom
 
         public async Task OnReceiveAssociationRequestAsync(DicomAssociation association)
         {
-            if (!association.CalledAE.Equals(SR.StrApplicationAETitle, StringComparison.OrdinalIgnoreCase))
+            if (!association.CalledAE.Equals(GeneralSettings.Default.LocalAETitle, StringComparison.OrdinalIgnoreCase))
             {
                 await SendAssociationRejectAsync(
                     DicomRejectResult.Permanent,

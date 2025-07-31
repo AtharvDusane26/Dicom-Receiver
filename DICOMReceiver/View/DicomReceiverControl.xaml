@@ -15,21 +15,21 @@
         </Grid.RowDefinitions>
 
         <!-- Add Node Form -->
-        <GroupBox Header="Add New Node" Margin="0 0 0 10">
+        <GroupBox Header="Configurations" Margin="0 0 0 10">
             <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center">
                 <StackPanel Orientation="Vertical" Margin="0 0 10 0">
                     <Label Content="AE Title" />
-                    <TextBox x:Name="txtAETitle" Width="150" />
+                    <TextBox x:Name="txtAETitle" Height="25"  Width="150" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0 0 10 0">
                     <Label Content="Host (IP)" />
-                    <TextBox x:Name="txtHost" Width="150" />
+                    <TextBox x:Name="txtHost" Height="25"  Width="150" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="0 0 10 0">
                     <Label Content="Port" />
-                    <TextBox x:Name="txtPort" Width="100" />
+                    <TextBox x:Name="txtPort" Height="25"  Width="100" />
                 </StackPanel>
-                <Button Content="Add Node" Width="100" VerticalAlignment="Bottom" Click="AddNode_Click" />
+                <Button Content="Configure" Width="100" Height="25" VerticalAlignment="Bottom" Click="Congigure_Click" />
             </StackPanel>
         </GroupBox>
 
@@ -45,12 +45,10 @@
 
         <!-- Control Buttons -->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 10 0 0">
-            <Button Content="Set FilePath" Width="100" Margin="5" Click="Button_Click" />
-            <Button Content="Start Server" Width="100" Margin="5" Click="StartServer_Click" />
-            <Button Content="Stop Server" Width="100" Margin="5" Click="StopServer_Click" />
-            <Button x:Name="btnEchoTest" Content="Echo Test" Width="100" Margin="5" Click="EchoTest_Click" />
-            <Button x:Name="btnAutoRoute" Content="Auto Route" Width="100" Margin="5" Click="AutoRoute_Click" />
-            <Button Content="Worklist" Width="100" Margin="5" Click="Worklist_Click" />
+            <Button Content="Set FilePath" Height="25" Width="100" Margin="5" Click="Button_Click" />
+            <Button Content="Start Server" Height="25" Width="100" Margin="5" Click="StartServer_Click" />
+            <Button Content="Stop Server" Width="100" Height="25" Margin="5" Click="StopServer_Click" />
+            <Button Content="Worklist" Width="100" Margin="5" Height="25" Click="Worklist_Click" />
 
         </StackPanel>
     </Grid>

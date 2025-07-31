@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>logo (2).ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="logo (2).ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentNHibernate" Version="3.4.1" />

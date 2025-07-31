@@ -43,5 +43,41 @@ namespace DICOMReceiver {
                 return ((string)(this["DatabaseName"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("104")]
+        public int LocalPort {
+            get {
+                return ((int)(this["LocalPort"]));
+            }
+            set {
+                this["LocalPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DCMReceiver")]
+        public string LocalAETitle {
+            get {
+                return ((string)(this["LocalAETitle"]));
+            }
+            set {
+                this["LocalAETitle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string LocalIP {
+            get {
+                return ((string)(this["LocalIP"]));
+            }
+            set {
+                this["LocalIP"] = value;
+            }
+        }
     }
 }

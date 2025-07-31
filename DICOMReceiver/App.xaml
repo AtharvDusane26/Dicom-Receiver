@@ -4,94 +4,68 @@
              xmlns:local="clr-namespace:DICOMReceiver"
            >
     <Application.Resources>
-        <Style TargetType="Grid">
-            <Setter Property="Background" Value="#2C2C2C"/>
-        </Style>
-        <!-- Window Style -->
-        <Style TargetType="Window">
-            <Setter Property="Background" Value="#2C2C2C"/>
-            <!-- Dark gray background -->
-            <Setter Property="ResizeMode" Value="NoResize"/>
-            <Setter Property="WindowStyle" Value="SingleBorderWindow"/>
-            <Setter Property="BorderBrush" Value="#37474F"/>
-            <!-- Dark cyan -->
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-        <Style TargetType="UserControl">
-            <Setter Property="Background" Value="#2C2C2C"/>
-            <!-- Dark gray background -->
-            <Setter Property="BorderBrush" Value="#37474F"/>
-            <!-- Dark cyan -->
-        </Style>
+        <Style TargetType="{x:Type Button}">
 
-        <!-- GroupBox Style -->
-        <Style TargetType="GroupBox">
-            <Setter Property="BorderBrush" Value="#37474F"/>
-            <!-- Dark cyan -->
-            <Setter Property="BorderThickness" Value="0.5"/>
-            <Setter Property="Background" Value="#2C2C2C"/>
-            <!-- Dark gray -->
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Foreground" Value="#E0E0E0"/>
-            <!-- Light gray text -->
-        </Style>
+            <Setter Property="FocusVisualStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="Control.Template">
+                            <Setter.Value>
+                                <ControlTemplate>
+                                    <Rectangle RadiusX="2" RadiusY="2" SnapsToDevicePixels="True"
+                           StrokeThickness="2"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
 
-        <!-- Label Style -->
-        <Style TargetType="Label">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="#E0E0E0"/>
-            <!-- Light gray text -->
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
-            <Setter Property="TextOptions.TextHintingMode" Value="Fixed"/>
-        </Style>
-
-        <!-- TextBox Style -->
-        <Style TargetType="TextBox">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="#E0E0E0"/>
-            <Setter Property="Height" Value="25"/>
-            <!-- Light gray text -->
-            <Setter Property="Background" Value="#424242"/>
-            <!-- Dark background -->
-            <Setter Property="BorderBrush" Value="#37474F"/>
-            <!-- Dark cyan -->
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="FontSize" Value="13"/>
-        </Style>
-
-        <!-- DatePicker Style -->
-        <Style TargetType="DatePicker">
-            <!-- Dark background -->
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Width" Value="160"/>
-            <Setter Property="Foreground" Value="Black"></Setter>
-            <!-- Light gray text -->
-        </Style>
-
-        <!-- Button Style -->
-        <Style TargetType="Button">
-            <Setter Property="Margin" Value="2"/>
-            <Setter Property="Background" Value="#37474F"/>
-            <Setter Property="Height" Value="25"/>
-            <!-- Dark cyan -->
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="WhiteSmoke"/>
-            <!-- Dark gray -->
-            <Setter Property="BorderThickness" Value="1"/>
+            </Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="WhiteSmoke"/>
+            <Setter Property="Padding" Value="1"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0.5" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="2" BorderThickness="1">
+                                <Border.Background>
+                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                        <RadialGradientBrush.RelativeTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" 
+                                          ScaleX="1.5" ScaleY="1.5"/>
+                                                <TranslateTransform X="0.02" Y="0.3"/>
+                                            </TransformGroup>
+                                        </RadialGradientBrush.RelativeTransform>
+                                        <GradientStop Offset="1" Color="#30B9CC"/>
+                                        <GradientStop Offset="0" Color="#30B9CC"/>
+                                    </RadialGradientBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            TextElement.FontWeight="Normal">
+                                </ContentPresenter>
+                            </Border>
+
+                        </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#00BCD4"/>
+                            <Trigger Property="Button.IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#7ca5aa" Offset="1"/>
+                                            <GradientStop Color="#7ca5aa" Offset="0.3"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -99,130 +73,50 @@
             </Setter>
         </Style>
 
-        <!-- TabItem Style -->
-        <Style TargetType="TabItem">
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="Width" Value="120"/>
-            <Setter Property="Background" Value="#37474F"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="WhiteSmoke"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#0097A7"/>
-                </Trigger>
-            </Style.Triggers>
+        <Style TargetType="{x:Type DataGrid}">
+            <Setter Property="ColumnHeaderStyle" Value="{DynamicResource ColumnHeaderStyle1}"/>
         </Style>
-
-
-        <!-- DataGrid Style -->
-        <Style TargetType="DataGrid">
-            <Setter Property="Background" Value="#424242"/>
-            <!-- Dark gray -->
-            <Setter Property="GridLinesVisibility" Value="All"/>
-            <Setter Property="HorizontalGridLinesBrush" Value="#00BCD4"/>
-            <!-- Light cyan -->
-            <Setter Property="VerticalGridLinesBrush" Value="#00BCD4"/>
-            <!-- Light cyan -->
-            <Setter Property="RowBackground" Value="#2C2C2C"/>
-            <!-- Darker rows -->
-            <Setter Property="AlternatingRowBackground" Value="#616161"/>
-            <!-- Lighter dark rows -->
-            <Setter Property="Foreground" Value="#E0E0E0"/>
-            <!-- Light gray text -->
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="IsReadOnly" Value="True"/>
-        </Style>
-
-        <!-- DataGridColumnHeader Style -->
+        <!--DataGridColumnHeader style-->
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="MinWidth" Value="120"/>
-            <Setter Property="Width" Value="auto"/>
-            <Setter Property="Background" Value="#37474F"/>
-            <!-- Dark cyan -->
-            <Setter Property="Foreground" Value="Black"/>
-            <Setter Property="BorderBrush" Value="#0097A7"/>
-            <!-- Dark cyan border -->
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Background" Value="#30B9CC"/>
+            <Setter Property="Foreground" Value="WhiteSmoke"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#00796B"/>
-                    <!-- Dark greenish cyan -->
+                    <Setter Property="ToolTip" Value="Click to sort."/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- ComboBox Style -->
-        <Style TargetType="ComboBox">
-            <Setter Property="Background" Value="#424242"/>
-            <!-- Dark background -->
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#37474F"/>
-            <!-- Dark cyan -->
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontSize" Value="12"/>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="Foreground"
+ Value="Black" />
+            <Setter Property="Background"
+ Value="WhiteSmoke" />
+            <Setter Property="FontSize"
+ Value="14" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border x:Name="border"
+             Background="Transparent"
+             BorderBrush="Transparent"
+             BorderThickness="1"
+             SnapsToDevicePixels="True">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="10,0,0,0" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#0097A7"/>
-                    <!-- Dark cyan -->
-                </Trigger>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="BorderBrush" Value="#00BCD4"/>
-                    <!-- Light cyan when focused -->
-                </Trigger>
             </Style.Triggers>
-
-            <!-- Customize ComboBox Popup (Dropdown) Background -->
-            <Style.Resources>
-                <Style TargetType="ComboBoxItem">
-                    <Setter Property="Background" Value="#2C2C2C"/>
-                    <Setter Property="Height" Value="25"/>
-                    <!-- Dark gray item background -->
-                    <Setter Property="Foreground" Value="White"/>
-                    <Setter Property="FontSize" Value="12"/>
-                    <Setter Property="BorderBrush" Value="#37474F"/>
-                    <!-- Dark cyan border -->
-                    <Setter Property="BorderThickness" Value="0.5"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ComboBoxItem">
-                                <Border Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Background="{TemplateBinding Background}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Border" Property="BorderBrush" Value="#00BCD4"/>
-                                        <!-- Light cyan on hover -->
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Style.Resources>
         </Style>
 
-        <!-- DataGridCell Style -->
-        <Style TargetType="DataGridCell">
-            <Setter Property="Height" Value="25"/>
-
-        </Style>
-
-        <!-- TextBlock Style -->
-        <Style TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Foreground" Value="#E0E0E0"/>
-            <!-- Light gray text -->
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
-            <Setter Property="TextOptions.TextHintingMode" Value="Fixed"/>
-        </Style>
     </Application.Resources>
 </Application>

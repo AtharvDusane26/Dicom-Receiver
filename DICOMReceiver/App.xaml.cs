@@ -22,6 +22,7 @@ namespace DICOMReceiver
     }
     internal class StartUp : ApplicationComponent
     {
+        private Mutex _myMutex = null;
         public override void Start()
         {
             base.Start();
@@ -34,6 +35,11 @@ namespace DICOMReceiver
                     return;
                 }
             }
+            if (IsAlreadyStarted())
+            {
+                MessageBox.Show("Application Already Starded", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                Environment.Exit(0);
+            }
             var component = new DatabaseConnectionComponent();
             component.LoadConfig();
             var manager = new DataBaseManager();
@@ -43,5 +49,12 @@ namespace DICOMReceiver
             Platform.Log(LogLevel.Info, "Application Started");
             window.ShowDialog();
         }
+        private bool IsAlreadyStarted()
+        {
+            if (_myMutex == null)
+                _myMutex = new Mutex(true, "F7A3C4B2-8D3F-4E29-AD8A-93D7F30CF2B6");
+            return !_myMutex.WaitOne(0, false);
+        }
     }
+
 }
